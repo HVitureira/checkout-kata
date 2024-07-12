@@ -23,4 +23,9 @@ final class MultiPricedPromo extends Promotion {
 
     return discountMultiplier * promoPrice;
   }
+
+  @override
+  String toString() {
+    return 'Buy $promoQuantity for $promoPrice£';
+  }
 }

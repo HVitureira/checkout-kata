@@ -22,4 +22,10 @@ final class MealDealPromo extends Promotion {
     // TODO: consider sets of 3 or more products
     return promoPrice * 2;
   }
+
+  @override
+  String toString() {
+    final skus = dealSkus.join(',');
+    return 'Meal: $skus together, for $promoPrice£ each';
+  }
 }

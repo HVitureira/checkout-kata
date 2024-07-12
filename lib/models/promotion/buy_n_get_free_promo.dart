@@ -22,4 +22,9 @@ final class BuyNGetFreePromo extends Promotion {
 
     return discountMultiplier * applicableItems.first.unitPrice;
   }
+
+  @override
+  String toString() {
+    return 'Buy $nQuantity itemSku, get 1 free';
+  }
 }

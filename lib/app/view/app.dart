@@ -1,4 +1,4 @@
-import 'package:checkout_kata/counter/view/counter_page.dart';
+import 'package:checkout_kata/pricing/pricing_page.dart';
 import 'package:flutter/material.dart';
 
 class CheckoutKata extends StatelessWidget {
@@ -7,12 +7,12 @@ class CheckoutKata extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Checkout Kata',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const CounterPage(title: 'Flutter Demo Home Page'),
+      home: const PricingPage(title: 'Pricing'),
     );
   }
 }

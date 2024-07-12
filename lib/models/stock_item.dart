@@ -1,6 +1,6 @@
 import 'package:checkout_kata/models/promotion/promotion.dart';
 
-sealed class StockItem {
+final class StockItem {
   const StockItem({
     required this.sku,
     required this.unitPrice,
