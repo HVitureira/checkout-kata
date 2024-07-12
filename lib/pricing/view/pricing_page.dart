@@ -23,7 +23,7 @@ class PricingPage extends StatelessWidget {
         promo: MultiPricedPromo(
           itemSku: 'B',
           promoQuantity: 2,
-          promoPrice: 1.25,
+          promoPrice: 125,
         ),
       ),
       const StockItem(
@@ -40,7 +40,7 @@ class PricingPage extends StatelessWidget {
         promo: MealDealPromo(
           sku: 'D',
           dealSkus: ['E'],
-          promoPrice: 3,
+          promoPrice: 300,
         ),
       ),
       const StockItem(
@@ -49,7 +49,7 @@ class PricingPage extends StatelessWidget {
         promo: MealDealPromo(
           sku: 'E',
           dealSkus: ['D'],
-          promoPrice: 3,
+          promoPrice: 300,
         ),
       ),
     ];

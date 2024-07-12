@@ -13,9 +13,13 @@ final class MultiPricedPromo extends Promotion {
 
   @override
   (List<CartItem>, double) applyPromo(List<CartItem> cart) {
-    final applicableItems = cart.where(
-      (item) => item.stockItem.sku.toLowerCase() == itemSku.toLowerCase(),
-    );
+    final applicableItems = [
+      ...cart.where(
+        (item) =>
+            (item.stockItem.sku.toLowerCase() == itemSku.toLowerCase()) &&
+            item.isPromoApplied == false,
+      ),
+    ];
     final totalItems = applicableItems.length;
     if (totalItems < promoQuantity) return (cart, 0);
 
@@ -23,12 +27,13 @@ final class MultiPricedPromo extends Promotion {
 
     cart.removeWhere(applicableItems.contains);
     final promoAppliedItems = applicableItems.map((item) => item.applyPromo());
-    final appliedItems = [...cart, ...promoAppliedItems];
+    final prices = promoAppliedItems
+        .map((e) => e.stockItem.unitPrice)
+        .reduce((value, element) => value + element);
 
     return (
-      cart..addAll(appliedItems),
-      (applicableItems.first.stockItem.unitPrice * applicableItems.length) -
-          (discountMultiplier * promoPrice)
+      cart..addAll(promoAppliedItems),
+      (discountMultiplier * prices) - promoPrice
     );
   }
 
