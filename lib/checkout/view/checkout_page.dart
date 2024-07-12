@@ -23,15 +23,61 @@ class CheckOutPage extends StatelessWidget {
           builder: (context) {
             return BlocBuilder<CheckoutCubit, CheckoutState>(
               builder: (context, state) {
-                if (state is CheckoutInitial) {
-                  return Center(
-                    child: Text('${state.items.length}'),
-                  );
-                }
-                return const SizedBox.shrink();
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: state.items.length,
+                        itemBuilder: (context, index) {
+                          final currentItem = state.items.elementAt(index);
+                          final itemTitle = currentItem.sku;
+                          final itemPrice = currentItem.unitPrice;
+                          final itemPromo = currentItem.promo;
+
+                          return Column(
+                            children: [
+                              ListTile(
+                                leading: const Icon(Icons.shopping_bag_sharp),
+                                title: Text(itemTitle),
+                                subtitle: Text(
+                                  'Price: $itemPrice, Promo: $itemPromo',
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(
+                                    Icons.shopping_cart_checkout_rounded,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ),
+                              const Divider(height: 0),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
               },
             );
           },
+        ),
+      ),
+      bottomSheet: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsetsDirectional.all(10),
+          child: ElevatedButton(
+            onPressed: () {},
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Finish Checkout'),
+                SizedBox(
+                  width: 10,
+                ),
+                Icon(Icons.shopping_cart_checkout),
+              ],
+            ),
+          ),
         ),
       ),
     );

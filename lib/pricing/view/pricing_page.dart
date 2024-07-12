@@ -93,7 +93,7 @@ class PricingPage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomSheet: BottomAppBar(
         child: Padding(
           padding: const EdgeInsetsDirectional.all(10),
           child: ElevatedButton(
