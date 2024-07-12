@@ -21,7 +21,8 @@ final class MultiPricedPromo extends Promotion {
 
     final discountMultiplier = totalItems ~/ promoQuantity;
 
-    return discountMultiplier * promoPrice;
+    return (applicableItems.first.unitPrice * applicableItems.length) -
+        (discountMultiplier * promoPrice);
   }
 
   @override

@@ -16,11 +16,19 @@ final class MealDealPromo extends Promotion {
       (item) => dealSkus.contains(item.sku),
     );
     if (applicableItems.isEmpty) return 0;
-    if (!applicableItems.every(dealSkus.contains)) return 0;
 
+    final skus = applicableItems.map((item) => item.sku);
+
+    if (!skus.every(dealSkus.contains)) {
+      return 0;
+    }
+
+    final prices = applicableItems.map((item) => item.unitPrice);
+    final totalPrice = prices.reduce((value, element) => value + element);
     //assuming only pairs of products
+
     // TODO: consider sets of 3 or more products
-    return promoPrice * 2;
+    return totalPrice - promoPrice * 2;
   }
 
   @override

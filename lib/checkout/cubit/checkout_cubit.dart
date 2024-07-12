@@ -14,22 +14,24 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       (item) => item.sku.toLowerCase() == sku.toLowerCase(),
     );
 
-    final itemCost = item.unitPrice;
+    var itemCost = item.unitPrice;
     var discount = 0.0;
+    final checkedItems = [...state.checkedItems, item];
     if (item.promo != null) {
       discount = item.promo!.applyPromo(
-        state.items,
+        checkedItems,
       );
+      itemCost -= discount;
     }
 
-    final processedItems = [...state.items..remove(item)];
+    //final processedItems = [...state.items..remove(item)];
 
     emit(
       CheckoutProcessed(
-        items: processedItems,
-        checkedItems: [...state.checkedItems, item],
+        items: state.items,
+        checkedItems: checkedItems,
         totalCost: state.totalCost + itemCost,
-        totalDiscount: state.totalCost + discount,
+        totalDiscount: state.totalDiscount + discount,
       ),
     );
   }
