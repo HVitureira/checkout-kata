@@ -12,22 +12,26 @@ final class BuyNGetFreePromo extends Promotion {
 
   @override
   (List<CartItem>, double) applyPromo(List<CartItem> cart) {
-    final applicableItems = cart.where(
-      (item) =>
-          item.stockItem.sku.toLowerCase() == itemSku.toLowerCase() &&
-          item.isPromoApplied == false,
-    );
+    final applicableItems = [
+      ...cart.where(
+        (item) =>
+            item.stockItem.sku.toLowerCase() == itemSku.toLowerCase() &&
+            item.isPromoApplied == false,
+      ),
+    ];
+
     final totalItems = applicableItems.length;
     if (totalItems < nQuantity) return (cart, 0);
 
     final discountMultiplier = totalItems ~/ nQuantity;
 
     cart.removeWhere(applicableItems.contains);
-    final promoAppliedItems = applicableItems.map((item) => item.applyPromo());
-    final appliedItems = [...cart, ...promoAppliedItems];
+    final promoAppliedItems = applicableItems.map(
+      (item) => item.applyPromo(),
+    );
 
     return (
-      cart..addAll(appliedItems),
+      cart..addAll(promoAppliedItems),
       discountMultiplier * applicableItems.first.stockItem.unitPrice
     );
   }
