@@ -1,3 +1,4 @@
+import 'package:checkout_kata/app/routes/routes.dart';
 import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
@@ -96,7 +97,10 @@ class PricingPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsetsDirectional.all(10),
           child: ElevatedButton(
-            onPressed: () => print('pressed'),
+            onPressed: () => _pushCheckoutPage(
+              context: context,
+              items: defaultRules,
+            ),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -110,6 +114,17 @@ class PricingPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _pushCheckoutPage({
+    required BuildContext context,
+    required List<StockItem> items,
+  }) {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.checkoutPage,
+      arguments: items,
     );
   }
 }
