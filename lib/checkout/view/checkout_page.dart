@@ -24,7 +24,21 @@ class CheckOutPage extends StatelessWidget {
             return BlocBuilder<CheckoutCubit, CheckoutState>(
               builder: (context, state) {
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Total Cost: ${state.totalCost}'),
+                          Text('Total discount: ${state.totalDiscount}'),
+                          Text(
+                            'Total checked items: ${state.checkedItems.length}',
+                          ),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: ListView.builder(
                         itemCount: state.items.length,
@@ -37,7 +51,8 @@ class CheckOutPage extends StatelessWidget {
                           return Column(
                             children: [
                               ListTile(
-                                leading: const Icon(Icons.shopping_bag_sharp),
+                                leading:
+                                    const Icon(Icons.shopping_basket_rounded),
                                 title: Text(itemTitle),
                                 subtitle: Text(
                                   'Price: $itemPrice, Promo: $itemPromo',
@@ -46,7 +61,9 @@ class CheckOutPage extends StatelessWidget {
                                   icon: const Icon(
                                     Icons.shopping_cart_checkout_rounded,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () => context
+                                      .read<CheckoutCubit>()
+                                      .checkOutItem(sku: currentItem.sku),
                                 ),
                               ),
                               const Divider(height: 0),
