@@ -1,34 +1,44 @@
+import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
-import 'package:checkout_kata/models/stock_item.dart';
 
 final class MealDealPromo extends Promotion {
   const MealDealPromo({
+    required this.sku,
     required this.dealSkus,
     required this.promoPrice,
   });
 
+  final String sku;
   final List<String> dealSkus;
   final double promoPrice;
 
   @override
-  double applyPromo(List<StockItem> cart) {
-    final applicableItems = cart.where(
-      (item) => dealSkus.contains(item.sku),
-    );
-    if (applicableItems.isEmpty) return 0;
+  (List<CartItem>, double) applyPromo(List<CartItem> cart) {
+    final applicableItems = [
+      ...cart.where(
+        (item) =>
+            (dealSkus.contains(item.stockItem.sku) ||
+                item.stockItem.sku.toLowerCase() == sku.toLowerCase()) &&
+            item.isPromoApplied == false,
+      ),
+    ];
+    final applicableSet = Set<CartItem>.from(applicableItems);
+    if (applicableSet.isEmpty) return (cart, 0);
 
-    final skus = applicableItems.map((item) => item.sku);
+    final skus = applicableSet.map((item) => item.stockItem.sku).toList();
 
-    if (!skus.every(dealSkus.contains)) {
-      return 0;
+    if (!dealSkus.every(skus.contains)) {
+      return (cart, 0);
     }
 
-    final prices = applicableItems.map((item) => item.unitPrice);
-    final totalPrice = prices.reduce((value, element) => value + element);
-    //assuming only pairs of products
+    cart.removeWhere(applicableSet.contains);
+    final promoAppliedItems =
+        applicableSet.map((item) => item.applyPromo()).toList();
+    final prices = promoAppliedItems
+        .map((e) => e.stockItem.unitPrice)
+        .reduce((value, element) => value + element);
 
-    // TODO: consider sets of 3 or more products
-    return totalPrice - promoPrice * 2;
+    return (cart..addAll(promoAppliedItems), prices - promoPrice);
   }
 
   @override

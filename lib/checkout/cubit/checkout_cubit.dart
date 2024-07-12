@@ -1,3 +1,4 @@
+import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/stock_item.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,15 +17,18 @@ class CheckoutCubit extends Cubit<CheckoutState> {
 
     var itemCost = item.unitPrice;
     var discount = 0.0;
-    final checkedItems = [...state.checkedItems, item];
+    var checkedItems = [...state.checkedItems, item.toCartItem()];
     if (item.promo != null) {
-      discount = item.promo!.applyPromo(
+      late List<CartItem> cart;
+
+      (cart, discount) = item.promo!.applyPromo(
         checkedItems,
       );
-      itemCost -= discount;
+      if (discount > 0) {
+        itemCost -= discount;
+        checkedItems = cart;
+      }
     }
-
-    //final processedItems = [...state.items..remove(item)];
 
     emit(
       CheckoutProcessed(

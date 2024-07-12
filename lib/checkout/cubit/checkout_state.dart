@@ -9,7 +9,7 @@ sealed class CheckoutState extends Equatable {
     required this.totalDiscount,
   });
   final List<StockItem> items;
-  final List<StockItem> checkedItems;
+  final List<CartItem> checkedItems;
   final double totalCost;
   final double totalDiscount;
 

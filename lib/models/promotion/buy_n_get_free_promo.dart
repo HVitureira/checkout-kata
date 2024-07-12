@@ -1,5 +1,5 @@
+import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
-import 'package:checkout_kata/models/stock_item.dart';
 
 final class BuyNGetFreePromo extends Promotion {
   const BuyNGetFreePromo({
@@ -11,16 +11,25 @@ final class BuyNGetFreePromo extends Promotion {
   final int nQuantity;
 
   @override
-  double applyPromo(List<StockItem> cart) {
+  (List<CartItem>, double) applyPromo(List<CartItem> cart) {
     final applicableItems = cart.where(
-      (item) => item.sku.toLowerCase() == itemSku.toLowerCase(),
+      (item) =>
+          item.stockItem.sku.toLowerCase() == itemSku.toLowerCase() &&
+          item.isPromoApplied == false,
     );
     final totalItems = applicableItems.length;
-    if (totalItems < nQuantity) return 0;
+    if (totalItems < nQuantity) return (cart, 0);
 
     final discountMultiplier = totalItems ~/ nQuantity;
 
-    return discountMultiplier * applicableItems.first.unitPrice;
+    cart.removeWhere(applicableItems.contains);
+    final promoAppliedItems = applicableItems.map((item) => item.applyPromo());
+    final appliedItems = [...cart, ...promoAppliedItems];
+
+    return (
+      cart..addAll(appliedItems),
+      discountMultiplier * applicableItems.first.stockItem.unitPrice
+    );
   }
 
   @override

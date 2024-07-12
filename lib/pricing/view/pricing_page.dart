@@ -38,6 +38,7 @@ class PricingPage extends StatelessWidget {
         sku: 'D',
         unitPrice: 150,
         promo: MealDealPromo(
+          sku: 'D',
           dealSkus: ['E'],
           promoPrice: 3,
         ),
@@ -46,6 +47,7 @@ class PricingPage extends StatelessWidget {
         sku: 'E',
         unitPrice: 200,
         promo: MealDealPromo(
+          sku: 'E',
           dealSkus: ['D'],
           promoPrice: 3,
         ),
