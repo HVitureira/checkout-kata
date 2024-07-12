@@ -28,6 +28,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   Bloc.observer = const AppBlocObserver();
 
   // Add cross-flavor configuration here
+  // We can also init firebase here and other global operations
 
   runApp(await builder());
 }
