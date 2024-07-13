@@ -45,8 +45,7 @@ class CheckOutPage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final currentItem = state.items.elementAt(index);
                           final itemTitle = currentItem.sku;
-                          final itemPrice = currentItem
-                              .getFormattedPrice(currentItem.unitPrice);
+                          final itemPrice = currentItem.formattedPrice;
                           final itemPromo = currentItem.promo;
 
                           return Column(
