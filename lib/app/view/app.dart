@@ -1,8 +1,11 @@
 import 'package:checkout_kata/app/routes/routes.dart';
 import 'package:checkout_kata/checkout/view/checkout_page.dart';
+import 'package:checkout_kata/data/shop_items_api.dart';
+import 'package:checkout_kata/data/shop_items_repository.dart';
 import 'package:checkout_kata/models/stock_item.dart';
 import 'package:checkout_kata/pricing/view/pricing_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutKata extends StatelessWidget {
   const CheckoutKata({super.key});
@@ -15,7 +18,10 @@ class CheckoutKata extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const PricingPage(title: 'Pricing'),
+      home: Provider<ShopItemsApi>(
+        create: (context) => ShopItemsRepository(),
+        child: const PricingPage(title: 'Pricing'),
+      ),
       routes: _routes,
     );
   }

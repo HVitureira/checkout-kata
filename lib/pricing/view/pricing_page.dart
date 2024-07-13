@@ -1,7 +1,5 @@
 import 'package:checkout_kata/app/routes/routes.dart';
-import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
-import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
-import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
+import 'package:checkout_kata/data/shop_items_api.dart';
 import 'package:checkout_kata/models/stock_item.dart';
 import 'package:checkout_kata/pricing/cubit/cubit.dart';
 import 'package:checkout_kata/pricing/view/item_pricing_rules_sheet.dart';
@@ -18,47 +16,10 @@ class PricingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultRules = [
-      const StockItem(sku: 'A', unitPrice: 50),
-      const StockItem(
-        sku: 'B',
-        unitPrice: 75,
-        promo: MultiPricedPromo(
-          itemSku: 'B',
-          promoQuantity: 2,
-          promoPrice: 125,
-        ),
-      ),
-      const StockItem(
-        sku: 'C',
-        unitPrice: 25,
-        promo: BuyNGetFreePromo(
-          itemSku: 'C',
-          nQuantity: 3,
-        ),
-      ),
-      const StockItem(
-        sku: 'D',
-        unitPrice: 150,
-        promo: MealDealPromo(
-          sku: 'D',
-          dealSkus: ['E'],
-          promoPrice: 300,
-        ),
-      ),
-      const StockItem(
-        sku: 'E',
-        unitPrice: 200,
-        promo: MealDealPromo(
-          sku: 'E',
-          dealSkus: ['D'],
-          promoPrice: 300,
-        ),
-      ),
-    ];
-
     return BlocProvider<PricingRulesCubit>(
-      create: (context) => PricingRulesCubit(startingItems: defaultRules),
+      create: (context) => PricingRulesCubit(
+        shopItemsApi: context.read<ShopItemsApi>(),
+      ),
       child: Builder(
         builder: (context) {
           return BlocBuilder<PricingRulesCubit, PricingRulesState>(

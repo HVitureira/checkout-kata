@@ -1,20 +1,22 @@
+import 'package:checkout_kata/data/shop_items_api.dart';
 import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
-import 'package:checkout_kata/models/stock_item.dart';
 import 'package:checkout_kata/pricing/cubit/pricing_rules_state.dart';
 import 'package:checkout_kata/pricing/models/form_promo.dart';
 import 'package:checkout_kata/pricing/models/pricing_rule.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class PricingRulesCubit extends HydratedCubit<PricingRulesState> {
-  PricingRulesCubit({required List<StockItem> startingItems})
+  PricingRulesCubit({required this.shopItemsApi})
       : super(
           PricingRulesState(
-            items: startingItems,
+            items: shopItemsApi.getShopItems(),
           ),
         );
+
+  final ShopItemsApi shopItemsApi;
 
   void changeRule({required String sku, required PricingRule rule}) {
     final newItems = [...state.items];

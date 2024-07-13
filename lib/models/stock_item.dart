@@ -23,11 +23,11 @@ final class StockItem extends Equatable with PoundPriceMixin {
 
   Map<String, dynamic> toJson() => _$StockItemToJson(this);
 
-  StockItem copyWith({double? unitPrice, Promotion? promo}) {
+  StockItem copyWith({required Promotion? promo, double? unitPrice}) {
     return StockItem(
       sku: sku,
       unitPrice: unitPrice ?? this.unitPrice,
-      promo: promo ?? this.promo,
+      promo: promo, // Careful to not override promos
     );
   }
 
