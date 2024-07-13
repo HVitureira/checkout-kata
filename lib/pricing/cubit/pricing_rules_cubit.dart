@@ -24,17 +24,6 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
     final item = newItems.firstWhere(
       (item) => item.sku.toLowerCase() == sku.toLowerCase(),
     );
-    final itemIdx = newItems.indexOf(item);
-    newItems.replaceRange(
-      itemIdx,
-      itemIdx,
-      [
-        item.copyWith(
-          unitPrice: rule.price,
-          promo: _getItemPromo(sku: sku, rule: rule),
-        ),
-      ],
-    );
 
     final updatedItem = item.copyWith(
       unitPrice: rule.price,
@@ -46,7 +35,7 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
         items: newItems
             .map(
               (existingItem) =>
-                  existingItem == item ? updatedItem : existingItem,
+                  existingItem.sku == item.sku ? updatedItem : existingItem,
             )
             .toList(),
       ),

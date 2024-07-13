@@ -17,12 +17,35 @@ class PricingRule {
   factory PricingRule.fromJson(Map<String, dynamic> json) =>
       _$PricingRuleFromJson(json);
 
+  @JsonKey(fromJson: _toDouble)
+  final double price;
+
+  final FormPromo? formPromo;
+
+  @JsonKey(fromJson: _toNullableInt)
+  final int? multiPricedQt;
+
+  @JsonKey(fromJson: _toNullableInt)
+  final int? buyNGet1Quantity;
+
+  @JsonKey(fromJson: _toNullableDouble)
+  final double? multiPricedPrice;
+
+  final List<String>? dealSkus;
+
+  static double _toDouble(String number) {
+    return double.parse(number);
+  }
+
   Map<String, dynamic> toJson() => _$PricingRuleToJson(this);
 
-  final double price;
-  final FormPromo? formPromo;
-  final int? multiPricedQt;
-  final int? buyNGet1Quantity;
-  final double? multiPricedPrice;
-  final List<String>? dealSkus;
+  static double? _toNullableDouble(String? number) {
+    if (number == null) return null;
+    return double.tryParse(number);
+  }
+
+  static int? _toNullableInt(String? number) {
+    if (number == null) return null;
+    return int.tryParse(number);
+  }
 }

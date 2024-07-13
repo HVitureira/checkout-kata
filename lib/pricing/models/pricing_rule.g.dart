@@ -7,11 +7,14 @@ part of 'pricing_rule.dart';
 // **************************************************************************
 
 PricingRule _$PricingRuleFromJson(Map<String, dynamic> json) => PricingRule(
-      price: (json['price'] as num).toDouble(),
+      price: PricingRule._toDouble(json['price'] as String),
       formPromo: $enumDecodeNullable(_$FormPromoEnumMap, json['formPromo']),
-      multiPricedQt: (json['multiPricedQt'] as num?)?.toInt(),
-      buyNGet1Quantity: (json['buyNGet1Quantity'] as num?)?.toInt(),
-      multiPricedPrice: (json['multiPricedPrice'] as num?)?.toDouble(),
+      multiPricedQt:
+          PricingRule._toNullableInt(json['multiPricedQt'] as String?),
+      buyNGet1Quantity:
+          PricingRule._toNullableInt(json['buyNGet1Quantity'] as String?),
+      multiPricedPrice:
+          PricingRule._toNullableDouble(json['multiPricedPrice'] as String?),
       dealSkus: (json['dealSkus'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
