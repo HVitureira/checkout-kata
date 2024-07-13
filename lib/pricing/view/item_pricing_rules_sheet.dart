@@ -106,6 +106,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
                     FormBuilderValidators.numeric(),
+                    FormBuilderValidators.positiveNumber(),
                   ]),
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
@@ -181,6 +182,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.numeric(),
+                      FormBuilderValidators.positiveNumber(),
                     ]),
                     decoration: const InputDecoration(
                       label: Text('Multi-price promo price'),
@@ -208,6 +210,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.numeric(),
+                      FormBuilderValidators.positiveNumber(),
                     ]),
                     decoration: const InputDecoration(
                       label: Text('Multi-price promo price'),
