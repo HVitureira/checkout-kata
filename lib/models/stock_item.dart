@@ -14,6 +14,14 @@ final class StockItem extends Equatable with PoundPriceMixin {
   final double unitPrice;
   final Promotion? promo;
 
+  StockItem copyWith({double? unitPrice, Promotion? promo}) {
+    return StockItem(
+      sku: sku,
+      unitPrice: unitPrice ?? this.unitPrice,
+      promo: promo ?? this.promo,
+    );
+  }
+
   CartItem toCartItem() {
     return CartItem(
       stockItem: this,
