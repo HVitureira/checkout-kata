@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'pricing_rule.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PricingRule {
   const PricingRule({
     required this.price,

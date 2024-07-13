@@ -27,7 +27,7 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
 
     final updatedItem = item.copyWith(
       unitPrice: rule.price,
-      promo: _getItemPromo(sku: sku, rule: rule),
+      promo: _mapRuleToPromo(sku: sku, rule: rule),
     );
 
     emit(
@@ -42,7 +42,7 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
     );
   }
 
-  Promotion? _getItemPromo({required String sku, required PricingRule rule}) {
+  Promotion? _mapRuleToPromo({required String sku, required PricingRule rule}) {
     switch (rule.formPromo) {
       case FormPromo.mealDeal:
         return MealDealPromo(

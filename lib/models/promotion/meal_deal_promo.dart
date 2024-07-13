@@ -1,13 +1,21 @@
 import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
 import 'package:checkout_kata/utils/utils.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'meal_deal_promo.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 final class MealDealPromo extends Promotion with PoundPriceMixin {
   const MealDealPromo({
     required this.sku,
     required this.dealSkus,
     required this.promoPrice,
   });
+
+  @override
+  factory MealDealPromo.fromJson(Map<String, dynamic> json) =>
+      _$MealDealPromoFromJson(json);
 
   final String sku;
   final List<String> dealSkus;
@@ -57,6 +65,12 @@ final class MealDealPromo extends Promotion with PoundPriceMixin {
 
     return ([...cart, ...promoAppliedItems], prices - promoPrice);
   }
+
+  @override
+  Map<String, dynamic> toJson() => _$MealDealPromoToJson(this);
+
+  MealDealPromo fromJson(Map<String, dynamic> json) =>
+      MealDealPromo.fromJson(json);
 
   @override
   String toString() {

@@ -1,11 +1,18 @@
 import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'buy_n_get_free_promo.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 final class BuyNGetFreePromo extends Promotion {
   const BuyNGetFreePromo({
     required this.itemSku,
     required this.nQuantity,
   });
+
+  factory BuyNGetFreePromo.fromJson(Map<String, dynamic> json) =>
+      _$BuyNGetFreePromoFromJson(json);
 
   final String itemSku;
   final int nQuantity;
@@ -40,4 +47,10 @@ final class BuyNGetFreePromo extends Promotion {
   String toString() {
     return 'Buy $nQuantity, get $nQuantity free';
   }
+
+  @override
+  Map<String, dynamic> toJson() => _$BuyNGetFreePromoToJson(this);
+
+  BuyNGetFreePromo fromJson(Map<String, dynamic> json) =>
+      BuyNGetFreePromo.fromJson(json);
 }
