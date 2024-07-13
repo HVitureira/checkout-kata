@@ -19,11 +19,12 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     var discount = 0.0;
     var checkedItems = [...state.checkedItems, item.toCartItem()];
     if (item.promo != null) {
-      late List<CartItem> cart;
-
-      (cart, discount) = item.promo!.applyPromo(
+      final (cart, appliedDiscount) = item.promo!.applyPromo(
         checkedItems,
       );
+
+      discount = appliedDiscount;
+
       if (discount > 0) {
         itemCost -= discount;
         checkedItems = cart;

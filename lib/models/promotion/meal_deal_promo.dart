@@ -22,6 +22,7 @@ final class MealDealPromo extends Promotion {
             item.isPromoApplied == false,
       ),
     ];
+    if (applicableItems.isEmpty) return (cart, 0);
 
     final itemsToApply = <CartItem>[];
 
@@ -44,11 +45,14 @@ final class MealDealPromo extends Promotion {
       cart.remove(item);
     }
 
-    final promoAppliedItems =
-        itemsToApply.map((item) => item.applyPromo()).toList();
-    final prices = promoAppliedItems
-        .map((e) => e.stockItem.unitPrice)
-        .reduce((value, element) => value + element);
+    final promoAppliedItems = itemsToApply.map(
+      (item) => item.applyPromo(),
+    );
+
+    final prices = promoAppliedItems.fold<double>(
+      0,
+      (sum, item) => sum + item.stockItem.unitPrice,
+    );
 
     return ([...cart, ...promoAppliedItems], prices - promoPrice);
   }
