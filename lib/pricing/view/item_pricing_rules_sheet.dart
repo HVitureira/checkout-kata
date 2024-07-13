@@ -155,6 +155,30 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     FormBuilderValidators.minLength(1),
                   ]),
                 ),
+              if (formPromo == FormPromo.multiPriced) ...[
+                FormBuilderTextField(
+                  name: 'multiPricedQuantity',
+                  initialValue: startingPromo is MultiPricedPromo
+                      ? startingPromo.promoQuantity.toString()
+                      : null,
+                  validator: FormBuilderValidators.integer(),
+                  decoration: const InputDecoration(
+                    label: Text('Multi-price promo quantity'),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                FormBuilderTextField(
+                  name: 'multiPricedPromoPrice',
+                  initialValue: startingPromo is MultiPricedPromo
+                      ? startingPromo.promoPrice.toString()
+                      : null,
+                  validator: FormBuilderValidators.numeric(),
+                  decoration: const InputDecoration(
+                    label: Text('Multi-price promo quantity'),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ],
               MaterialButton(
                 color: Theme.of(context).colorScheme.secondary,
                 onPressed: () {
