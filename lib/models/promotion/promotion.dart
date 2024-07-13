@@ -9,6 +9,8 @@ import 'package:json_annotation/json_annotation.dart';
 abstract class Promotion {
   const Promotion();
 
+  /// Returns a concrete [Promotion] based on the keys present in each
+  /// concrete model
   factory Promotion.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('nQuantity')) {
       return BuyNGetFreePromo.fromJson(json);
