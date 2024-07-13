@@ -33,13 +33,6 @@ class PricingPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text(
-                        "Define this week's prices",
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Divider(height: 0),
                       Expanded(
                         child: ListView.builder(
                           itemCount: state.items.length,
