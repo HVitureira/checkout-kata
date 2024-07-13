@@ -11,6 +11,7 @@ abstract class ItemPricingSheet {
   static Future<void> show({
     required BuildContext context,
     required StockItem item,
+    required List<StockItem> availableItems,
     Key? key,
   }) {
     return showModalBottomSheet<void>(
@@ -25,6 +26,7 @@ abstract class ItemPricingSheet {
         return _ItemPricingForm(
           key: key,
           item: item,
+          availableItems: availableItems,
         );
       },
     );
@@ -32,15 +34,22 @@ abstract class ItemPricingSheet {
 }
 
 class _ItemPricingForm extends StatefulWidget {
-  const _ItemPricingForm({required this.item, super.key});
+  const _ItemPricingForm({
+    required this.item,
+    required this.availableItems,
+    super.key,
+  });
 
   final StockItem item;
+  final List<StockItem> availableItems;
+
   @override
   State<_ItemPricingForm> createState() => _ItemPricingFormState();
 }
 
 class _ItemPricingFormState extends State<_ItemPricingForm> {
   StockItem get item => widget.item;
+  List<StockItem> get availableItems => widget.availableItems;
 
   late FormPromo? formPromo;
 
@@ -88,19 +97,23 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 10),
-              FormBuilderDropdown(
+              FormBuilderDropdown<FormPromo?>(
                 name: 'promo',
                 initialValue: formPromo,
                 decoration: const InputDecoration(labelText: 'Promotion'),
-                items: FormPromo.values
-                    .map(
-                      (promo) => DropdownMenuItem(
-                        alignment: AlignmentDirectional.center,
-                        value: promo,
-                        child: Text(promo.name),
-                      ),
-                    )
-                    .toList(),
+                items: [
+                  const DropdownMenuItem(
+                    alignment: AlignmentDirectional.center,
+                    child: Text('None'),
+                  ),
+                  ...FormPromo.values.map(
+                    (promo) => DropdownMenuItem(
+                      alignment: AlignmentDirectional.center,
+                      value: promo,
+                      child: Text(promo.name),
+                    ),
+                  ),
+                ],
                 onChanged: (value) => setState(() {
                   formPromo = value;
                 }),
@@ -116,6 +129,31 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     label: Text('Quantity'),
                   ),
                   keyboardType: TextInputType.number,
+                ),
+              if (formPromo == FormPromo.mealDeal)
+                FormBuilderCheckboxGroup<String>(
+                  name: 'mealDeal',
+                  decoration: const InputDecoration(
+                    label: Text('Choose the deal group'),
+                  ),
+                  options: availableItems
+                      .where((i) => i.sku != item.sku)
+                      .map(
+                        (optionItem) => FormBuilderFieldOption(
+                          value: optionItem.sku,
+                        ),
+                      )
+                      .toList(),
+                  initialValue: startingPromo is MealDealPromo
+                      ? startingPromo.dealSkus
+                      : null,
+                  separator: const VerticalDivider(
+                    width: 10,
+                    thickness: 5,
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.minLength(1),
+                  ]),
                 ),
               MaterialButton(
                 color: Theme.of(context).colorScheme.secondary,

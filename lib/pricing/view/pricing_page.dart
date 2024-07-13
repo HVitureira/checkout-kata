@@ -94,6 +94,7 @@ class PricingPage extends StatelessWidget {
                           onPressed: () => _showEditDialog(
                             context: context,
                             item: currentItem,
+                            availableItems: defaultRules,
                           ),
                         ),
                       ),
@@ -144,7 +145,12 @@ class PricingPage extends StatelessWidget {
   void _showEditDialog({
     required BuildContext context,
     required StockItem item,
+    required List<StockItem> availableItems,
   }) {
-    ItemPricingSheet.show(context: context, item: item);
+    ItemPricingSheet.show(
+      context: context,
+      item: item,
+      availableItems: availableItems,
+    );
   }
 }
