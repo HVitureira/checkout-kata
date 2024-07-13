@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
-import 'package:checkout_kata/models/promotion/promotion.dart';
 import 'package:checkout_kata/models/stock_item.dart';
+import 'package:checkout_kata/pricing/models/form_promo.dart';
+import 'package:checkout_kata/pricing/models/pricing_rule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -52,11 +55,9 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
   List<StockItem> get availableItems => widget.availableItems;
 
   late FormPromo? formPromo;
-
   @override
   void initState() {
-    formPromo = _mapPromotionToFormPromo(item.promo);
-
+    formPromo = item.promo?.asFormPromo;
     super.initState();
   }
 
@@ -64,6 +65,12 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormBuilderState>();
     final startingPromo = item.promo;
+    const priceFieldKey = 'price';
+    const promoFieldKey = 'promo';
+    const buyNGet1FieldQtKey = 'buyNGet1Quantity';
+    const mealDealFieldKey = 'mealDeal';
+    const mPricedQtFieldKey = 'multiPricedQuantity';
+    const mPricedPriceFieldKey = 'multiPricedPromoPrice';
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +91,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
             mainAxisSize: MainAxisSize.min,
             children: [
               FormBuilderTextField(
-                name: 'price',
+                name: priceFieldKey,
                 initialValue: item.unitPrice.toString(),
                 decoration: const InputDecoration(
                   labelText: 'Unit Price (in pence)',
@@ -98,7 +105,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
               ),
               const SizedBox(height: 10),
               FormBuilderDropdown<FormPromo?>(
-                name: 'promo',
+                name: promoFieldKey,
                 initialValue: formPromo,
                 decoration: const InputDecoration(labelText: 'Promotion'),
                 items: [
@@ -120,7 +127,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
               ),
               if (formPromo == FormPromo.buyNGet1)
                 FormBuilderTextField(
-                  name: 'buyNGet1',
+                  name: buyNGet1FieldQtKey,
                   initialValue: startingPromo is BuyNGetFreePromo
                       ? startingPromo.nQuantity.toString()
                       : null,
@@ -129,10 +136,12 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     label: Text('Quantity'),
                   ),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) =>
+                      value != null ? int.parse(value) : null,
                 ),
               if (formPromo == FormPromo.mealDeal)
                 FormBuilderCheckboxGroup<String>(
-                  name: 'mealDeal',
+                  name: mealDealFieldKey,
                   decoration: const InputDecoration(
                     label: Text('Choose the deal group'),
                   ),
@@ -157,7 +166,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                 ),
               if (formPromo == FormPromo.multiPriced) ...[
                 FormBuilderTextField(
-                  name: 'multiPricedQuantity',
+                  name: mPricedQtFieldKey,
                   initialValue: startingPromo is MultiPricedPromo
                       ? startingPromo.promoQuantity.toString()
                       : null,
@@ -166,29 +175,38 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     label: Text('Multi-price promo quantity'),
                   ),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) =>
+                      value != null ? int.parse(value) : null,
                 ),
                 FormBuilderTextField(
-                  name: 'multiPricedPromoPrice',
+                  name: mPricedPriceFieldKey,
                   initialValue: startingPromo is MultiPricedPromo
                       ? startingPromo.promoPrice.toString()
                       : null,
                   validator: FormBuilderValidators.numeric(),
                   decoration: const InputDecoration(
-                    label: Text('Multi-price promo quantity'),
+                    label: Text('Multi-price promo price'),
                   ),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) =>
+                      value != null ? double.parse(value) : null,
                 ),
               ],
+              const SizedBox(
+                height: 10,
+              ),
               MaterialButton(
                 color: Theme.of(context).colorScheme.secondary,
+                minWidth: double.infinity,
                 onPressed: () {
                   // Validate and save the form values
-                  formKey.currentState?.saveAndValidate();
-                  debugPrint(formKey.currentState?.value.toString());
-
-                  // On another side, can access all field values without saving form with instantValues
-                  formKey.currentState?.validate();
-                  debugPrint(formKey.currentState?.instantValue.toString());
+                  final isValid = formKey.currentState?.saveAndValidate();
+                  if (isValid ?? false) {
+                    log(formKey.currentState?.value.toString() ?? 'no val');
+                    final rule = PricingRule.fromJson(
+                      formKey.currentState!.value,
+                    );
+                  }
                 },
                 child: const Text('Edit'),
               ),
@@ -198,23 +216,4 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
       ),
     );
   }
-
-  FormPromo? _mapPromotionToFormPromo(Promotion? promo) {
-    switch (promo.runtimeType) {
-      case BuyNGetFreePromo:
-        return FormPromo.buyNGet1;
-      case MealDealPromo:
-        return FormPromo.mealDeal;
-      case MultiPricedPromo:
-        return FormPromo.multiPriced;
-      default:
-        return null;
-    }
-  }
-}
-
-enum FormPromo {
-  mealDeal,
-  buyNGet1,
-  multiPriced,
 }
