@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
