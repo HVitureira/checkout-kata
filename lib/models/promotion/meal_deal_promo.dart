@@ -1,7 +1,8 @@
 import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
+import 'package:checkout_kata/utils/utils.dart';
 
-final class MealDealPromo extends Promotion {
+final class MealDealPromo extends Promotion with PoundPriceMixin {
   const MealDealPromo({
     required this.sku,
     required this.dealSkus,
@@ -60,6 +61,6 @@ final class MealDealPromo extends Promotion {
   @override
   String toString() {
     final skus = dealSkus.join(',');
-    return 'Meal: $skus together, for $promoPrice£ each';
+    return 'Meal: $skus together, for ${getFormattedPrice(promoPrice)} each';
   }
 }

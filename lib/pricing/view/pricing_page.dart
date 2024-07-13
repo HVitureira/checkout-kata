@@ -76,7 +76,7 @@ class PricingPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final currentItem = defaultRules.elementAt(index);
                   final itemTitle = currentItem.sku;
-                  final itemPrice = currentItem.unitPrice;
+                  final itemPrice = currentItem.formattedPrice;
                   final itemPromo = currentItem.promo;
 
                   return Column(
@@ -84,7 +84,10 @@ class PricingPage extends StatelessWidget {
                       ListTile(
                         leading: const Icon(Icons.shopping_bag_sharp),
                         title: Text(itemTitle),
-                        subtitle: Text('Price: $itemPrice, Promo: $itemPromo'),
+                        subtitle: Text(
+                          'Price: $itemPrice, '
+                          'Promo: ${itemPromo ?? 'No promo'}',
+                        ),
                       ),
                       const Divider(height: 0),
                     ],

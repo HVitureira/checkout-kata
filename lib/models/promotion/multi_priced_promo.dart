@@ -1,7 +1,8 @@
 import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
+import 'package:checkout_kata/utils/utils.dart';
 
-final class MultiPricedPromo extends Promotion {
+final class MultiPricedPromo extends Promotion with PoundPriceMixin {
   const MultiPricedPromo({
     required this.itemSku,
     required this.promoQuantity,
@@ -39,6 +40,6 @@ final class MultiPricedPromo extends Promotion {
 
   @override
   String toString() {
-    return 'Buy $promoQuantity for $promoPrice£';
+    return 'Buy $promoQuantity for ${getFormattedPrice(promoPrice)}';
   }
 }

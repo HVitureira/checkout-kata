@@ -31,8 +31,8 @@ class CheckOutPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Total Cost: ${state.totalCost}'),
-                          Text('Total discount: ${state.totalDiscount}'),
+                          Text('Total Cost: ${state.formattedCost}'),
+                          Text('Total discount: ${state.formattedDiscount}'),
                           Text(
                             'Total checked items: ${state.checkedItems.length}',
                           ),
@@ -45,7 +45,8 @@ class CheckOutPage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final currentItem = state.items.elementAt(index);
                           final itemTitle = currentItem.sku;
-                          final itemPrice = currentItem.unitPrice;
+                          final itemPrice = currentItem
+                              .getFormattedPrice(currentItem.unitPrice);
                           final itemPromo = currentItem.promo;
 
                           return Column(
@@ -55,7 +56,8 @@ class CheckOutPage extends StatelessWidget {
                                     const Icon(Icons.shopping_basket_rounded),
                                 title: Text(itemTitle),
                                 subtitle: Text(
-                                  'Price: $itemPrice, Promo: $itemPromo',
+                                  'Price: $itemPrice '
+                                  'Promo: ${itemPromo ?? 'No promo'}',
                                 ),
                                 trailing: IconButton(
                                   icon: const Icon(

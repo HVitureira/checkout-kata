@@ -1,7 +1,7 @@
 part of 'checkout_cubit.dart';
 
 @immutable
-sealed class CheckoutState extends Equatable {
+sealed class CheckoutState extends Equatable with PoundPriceMixin {
   const CheckoutState({
     required this.items,
     required this.checkedItems,
@@ -12,6 +12,9 @@ sealed class CheckoutState extends Equatable {
   final List<CartItem> checkedItems;
   final double totalCost;
   final double totalDiscount;
+
+  String get formattedCost => getFormattedPrice(totalCost);
+  String get formattedDiscount => getFormattedPrice(totalDiscount);
 
   @override
   List<Object?> get props => [items, checkedItems, totalCost];

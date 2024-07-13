@@ -1,5 +1,6 @@
 import 'package:checkout_kata/models/cart_item.dart';
 import 'package:checkout_kata/models/stock_item.dart';
+import 'package:checkout_kata/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
