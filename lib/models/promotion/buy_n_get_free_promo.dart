@@ -45,7 +45,7 @@ final class BuyNGetFreePromo extends Promotion {
 
   @override
   String toString() {
-    return 'Buy $nQuantity, get $nQuantity free';
+    return 'Buy $nQuantity, get 1 free';
   }
 
   @override

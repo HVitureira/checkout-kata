@@ -3,14 +3,12 @@ import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
 import 'package:checkout_kata/models/promotion/promotion.dart';
 import 'package:checkout_kata/models/stock_item.dart';
+import 'package:checkout_kata/pricing/cubit/pricing_rules_state.dart';
 import 'package:checkout_kata/pricing/models/form_promo.dart';
 import 'package:checkout_kata/pricing/models/pricing_rule.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-part 'pricing_rules_state.dart';
-
-class PricingRulesCubit extends Cubit<PricingRulesState> {
+class PricingRulesCubit extends HydratedCubit<PricingRulesState> {
   PricingRulesCubit({required List<StockItem> startingItems})
       : super(
           PricingRulesState(
@@ -25,9 +23,10 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
       (item) => item.sku.toLowerCase() == sku.toLowerCase(),
     );
 
+    final newPromo = _mapRuleToPromo(sku: sku, rule: rule);
     final updatedItem = item.copyWith(
       unitPrice: rule.price,
-      promo: _mapRuleToPromo(sku: sku, rule: rule),
+      promo: newPromo,
     );
 
     emit(
@@ -48,10 +47,10 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
         return MealDealPromo(
           sku: sku,
           dealSkus: rule.dealSkus!,
-          promoPrice: rule.multiPricedPrice!,
+          promoPrice: rule.mealDealPrice!,
         );
       case FormPromo.buyNGet1:
-        BuyNGetFreePromo(
+        return BuyNGetFreePromo(
           itemSku: sku,
           nQuantity: rule.buyNGet1Quantity!,
         );
@@ -64,6 +63,12 @@ class PricingRulesCubit extends Cubit<PricingRulesState> {
       case null:
         return null;
     }
-    return null;
   }
+
+  @override
+  PricingRulesState? fromJson(Map<String, dynamic> json) =>
+      PricingRulesState.fromJson(json);
+
+  @override
+  Map<String, dynamic>? toJson(PricingRulesState state) => state.toJson();
 }

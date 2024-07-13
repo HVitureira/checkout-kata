@@ -15,6 +15,8 @@ PricingRule _$PricingRuleFromJson(Map<String, dynamic> json) => PricingRule(
           PricingRule._toNullableInt(json['buyNGet1Quantity'] as String?),
       multiPricedPrice:
           PricingRule._toNullableDouble(json['multiPricedPrice'] as String?),
+      mealDealPrice:
+          PricingRule._toNullableDouble(json['mealDealPrice'] as String?),
       dealSkus: (json['dealSkus'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -27,6 +29,7 @@ Map<String, dynamic> _$PricingRuleToJson(PricingRule instance) =>
       'multiPricedQt': instance.multiPricedQt,
       'buyNGet1Quantity': instance.buyNGet1Quantity,
       'multiPricedPrice': instance.multiPricedPrice,
+      'mealDealPrice': instance.mealDealPrice,
       'dealSkus': instance.dealSkus,
     };
 

@@ -11,6 +11,7 @@ class PricingRule {
     this.multiPricedQt,
     this.buyNGet1Quantity,
     this.multiPricedPrice,
+    this.mealDealPrice,
     this.dealSkus,
   });
 
@@ -30,6 +31,9 @@ class PricingRule {
 
   @JsonKey(fromJson: _toNullableDouble)
   final double? multiPricedPrice;
+
+  @JsonKey(fromJson: _toNullableDouble)
+  final double? mealDealPrice;
 
   final List<String>? dealSkus;
 

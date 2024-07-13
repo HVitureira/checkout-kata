@@ -3,7 +3,7 @@ import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
 import 'package:checkout_kata/models/stock_item.dart';
-import 'package:checkout_kata/pricing/cubit/pricing_rules_cubit.dart';
+import 'package:checkout_kata/pricing/cubit/cubit.dart';
 import 'package:checkout_kata/pricing/view/item_pricing_rules_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

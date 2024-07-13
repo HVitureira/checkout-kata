@@ -4,7 +4,7 @@ import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
 import 'package:checkout_kata/models/stock_item.dart';
-import 'package:checkout_kata/pricing/cubit/pricing_rules_cubit.dart';
+import 'package:checkout_kata/pricing/cubit/cubit.dart';
 import 'package:checkout_kata/pricing/models/form_promo.dart';
 import 'package:checkout_kata/pricing/models/pricing_rule.dart';
 import 'package:flutter/material.dart';
@@ -74,9 +74,10 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
     const priceFieldKey = 'price';
     const promoFieldKey = 'promo';
     const buyNGet1FieldQtKey = 'buyNGet1Quantity';
-    const mealDealFieldKey = 'mealDeal';
-    const mPricedQtFieldKey = 'multiPricedQuantity';
-    const mPricedPriceFieldKey = 'multiPricedPromoPrice';
+    const mealDealSkusFieldKey = 'dealSkus';
+    const mealDealPriceFieldKey = 'mealDealPrice';
+    const mPricedQtFieldKey = 'multiPricedQt';
+    const mPricedPriceFieldKey = 'multiPricedPrice';
 
     return Scaffold(
       appBar: AppBar(
@@ -139,17 +140,18 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     initialValue: startingPromo is BuyNGetFreePromo
                         ? startingPromo.nQuantity.toString()
                         : null,
-                    validator: FormBuilderValidators.integer(),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.integer(),
+                      FormBuilderValidators.min(2),
+                    ]),
                     decoration: const InputDecoration(
                       label: Text('Quantity'),
                     ),
                     keyboardType: TextInputType.number,
-                    valueTransformer: (value) =>
-                        value != null ? int.parse(value) : null,
                   ),
-                if (formPromo == FormPromo.mealDeal)
+                if (formPromo == FormPromo.mealDeal) ...[
                   FormBuilderCheckboxGroup<String>(
-                    name: mealDealFieldKey,
+                    name: mealDealSkusFieldKey,
                     decoration: const InputDecoration(
                       label: Text('Choose the deal group'),
                     ),
@@ -169,9 +171,25 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                       thickness: 5,
                     ),
                     validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
                       FormBuilderValidators.minLength(1),
                     ]),
                   ),
+                  FormBuilderTextField(
+                    name: mealDealPriceFieldKey,
+                    initialValue: startingPromo is MealDealPromo
+                        ? startingPromo.promoPrice.toString()
+                        : null,
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(),
+                    ]),
+                    decoration: const InputDecoration(
+                      label: Text('Multi-price promo price'),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
                 if (formPromo == FormPromo.multiPriced) ...[
                   FormBuilderTextField(
                     name: mPricedQtFieldKey,
@@ -183,21 +201,20 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                       label: Text('Multi-price promo quantity'),
                     ),
                     keyboardType: TextInputType.number,
-                    valueTransformer: (value) =>
-                        value != null ? int.parse(value) : null,
                   ),
                   FormBuilderTextField(
                     name: mPricedPriceFieldKey,
                     initialValue: startingPromo is MultiPricedPromo
                         ? startingPromo.promoPrice.toString()
                         : null,
-                    validator: FormBuilderValidators.numeric(),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(),
+                    ]),
                     decoration: const InputDecoration(
                       label: Text('Multi-price promo price'),
                     ),
                     keyboardType: TextInputType.number,
-                    valueTransformer: (value) =>
-                        value != null ? double.parse(value) : null,
                   ),
                 ],
                 const SizedBox(
@@ -210,9 +227,11 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
                     // Validate and save the form values
                     final isValid = formKey.currentState?.saveAndValidate();
                     if (isValid ?? false) {
-                      log(formKey.currentState?.value.toString() ?? 'no val');
                       final rule = PricingRule.fromJson(
-                        formKey.currentState!.value,
+                        {
+                          'formPromo': formPromo?.name,
+                          ...formKey.currentState!.value,
+                        },
                       );
                       context.read<PricingRulesCubit>().changeRule(
                             sku: item.sku,
@@ -230,7 +249,7 @@ class _ItemPricingFormState extends State<_ItemPricingForm> {
     );
   }
 
-  _rulesCubitListener(BuildContext context, PricingRulesState rulesState) {
+  void _rulesCubitListener(BuildContext context, PricingRulesState rulesState) {
     Navigator.pop(context);
   }
 }
