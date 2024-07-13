@@ -22,23 +22,35 @@ final class MealDealPromo extends Promotion {
             item.isPromoApplied == false,
       ),
     ];
-    final applicableSet = Set<CartItem>.from(applicableItems);
-    if (applicableSet.isEmpty) return (cart, 0);
 
-    final skus = applicableSet.map((item) => item.stockItem.sku).toList();
+    final itemsToApply = <CartItem>[];
+
+    for (final item in applicableItems) {
+      final curItem = applicableItems.elementAt(applicableItems.indexOf(item));
+      if (!itemsToApply.contains(curItem)) {
+        itemsToApply.add(curItem);
+      }
+    }
+
+    if (itemsToApply.isEmpty) return (cart, 0);
+
+    final skus = itemsToApply.map((item) => item.stockItem.sku).toList();
 
     if (!dealSkus.every(skus.contains)) {
       return (cart, 0);
     }
 
-    cart.removeWhere(applicableSet.contains);
+    for (final item in itemsToApply) {
+      cart.remove(item);
+    }
+
     final promoAppliedItems =
-        applicableSet.map((item) => item.applyPromo()).toList();
+        itemsToApply.map((item) => item.applyPromo()).toList();
     final prices = promoAppliedItems
         .map((e) => e.stockItem.unitPrice)
         .reduce((value, element) => value + element);
 
-    return (cart..addAll(promoAppliedItems), prices - promoPrice);
+    return ([...cart, ...promoAppliedItems], prices - promoPrice);
   }
 
   @override
