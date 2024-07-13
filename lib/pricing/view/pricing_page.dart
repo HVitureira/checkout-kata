@@ -2,11 +2,9 @@ import 'package:checkout_kata/app/routes/routes.dart';
 import 'package:checkout_kata/models/promotion/buy_n_get_free_promo.dart';
 import 'package:checkout_kata/models/promotion/meal_deal_promo.dart';
 import 'package:checkout_kata/models/promotion/multi_priced_promo.dart';
-import 'package:checkout_kata/models/promotion/promotion.dart';
 import 'package:checkout_kata/models/stock_item.dart';
+import 'package:checkout_kata/pricing/view/item_pricing_rules_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class PricingPage extends StatelessWidget {
   const PricingPage({
@@ -147,101 +145,6 @@ class PricingPage extends StatelessWidget {
     required BuildContext context,
     required StockItem item,
   }) {
-    final formKey = GlobalKey<FormBuilderState>();
-
-    showModalBottomSheet<void>(
-      useSafeArea: true,
-      context: context,
-      isScrollControlled: true,
-      constraints: BoxConstraints.tightFor(
-        // Set minimum and maximum heights
-        width: MediaQuery.of(context).size.width, // Full width
-      ),
-      builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.close_rounded,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text('Edit item ${item.sku}'),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(10),
-            child: FormBuilder(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FormBuilderTextField(
-                    name: 'price',
-                    initialValue: item.unitPrice.toString(),
-                    decoration: const InputDecoration(
-                      labelText: 'Unit Price (in pence)',
-                    ),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(),
-                    ]),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                  ),
-                  const SizedBox(height: 10),
-                  FormBuilderDropdown(
-                    name: 'promo',
-                    initialValue: _mapPromotionToFormPromo(item.promo),
-                    decoration: const InputDecoration(labelText: 'Promotion'),
-                    items: FormPromo.values
-                        .map(
-                          (promo) => DropdownMenuItem(
-                            alignment: AlignmentDirectional.center,
-                            value: promo,
-                            child: Text(promo.name),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  MaterialButton(
-                    color: Theme.of(context).colorScheme.secondary,
-                    onPressed: () {
-                      // Validate and save the form values
-                      formKey.currentState?.saveAndValidate();
-                      debugPrint(formKey.currentState?.value.toString());
-
-                      // On another side, can access all field values without saving form with instantValues
-                      formKey.currentState?.validate();
-                      debugPrint(formKey.currentState?.instantValue.toString());
-                    },
-                    child: const Text('Edit'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    ItemPricingSheet.show(context: context, item: item);
   }
-
-  FormPromo? _mapPromotionToFormPromo(Promotion? promo) {
-    switch (promo.runtimeType) {
-      case BuyNGetFreePromo:
-        return FormPromo.buyNGet1;
-      case MealDealPromo:
-        return FormPromo.mealDeal;
-      case MultiPricedPromo:
-        return FormPromo.multiPriced;
-      default:
-        return null;
-    }
-  }
-}
-
-enum FormPromo {
-  mealDeal,
-  buyNGet1,
-  multiPriced,
 }
