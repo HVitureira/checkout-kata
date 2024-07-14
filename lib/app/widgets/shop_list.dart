@@ -32,7 +32,7 @@ class ShopList extends StatelessWidget {
               title: Text(itemTitle),
               subtitle: Text(
                 'Price: $itemPrice '
-                'Promo: ${itemPromo ?? 'No promo'}',
+                'Promo: ${itemPromo?.info ?? 'No promo'}',
               ),
               trailing: IconButton(
                 icon: Icon(

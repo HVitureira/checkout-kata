@@ -23,8 +23,10 @@ final class MealDealPromo extends Promotion with PoundPriceMixin {
 
   @override
   (List<CartItem>, double) applyPromo(List<CartItem> cart) {
+    final cartCopy = [...cart];
+
     final applicableItems = [
-      ...cart.where(
+      ...cartCopy.where(
         (item) =>
             (dealSkus.contains(item.stockItem.sku) ||
                 item.stockItem.sku.toLowerCase() == sku.toLowerCase()) &&
@@ -35,8 +37,11 @@ final class MealDealPromo extends Promotion with PoundPriceMixin {
 
     final itemsToApply = <CartItem>[];
 
-    for (final item in applicableItems) {
-      final curItem = applicableItems.elementAt(applicableItems.indexOf(item));
+    // Remove duplicate items (with the same props)
+    // Problem introduced by the usage of Equatable
+    for (var i = 0; i < applicableItems.length; i++) {
+      final curItem = applicableItems[i];
+
       if (!itemsToApply.contains(curItem)) {
         itemsToApply.add(curItem);
       }
@@ -51,7 +56,7 @@ final class MealDealPromo extends Promotion with PoundPriceMixin {
     }
 
     for (final item in itemsToApply) {
-      cart.remove(item);
+      cartCopy.remove(item);
     }
 
     final promoAppliedItems = itemsToApply.map(
@@ -63,17 +68,14 @@ final class MealDealPromo extends Promotion with PoundPriceMixin {
       (sum, item) => sum + item.stockItem.unitPrice,
     );
 
-    return ([...cart, ...promoAppliedItems], prices - promoPrice);
+    return ([...cartCopy, ...promoAppliedItems], prices - promoPrice);
   }
 
   @override
   Map<String, dynamic> toJson() => _$MealDealPromoToJson(this);
 
-  MealDealPromo fromJson(Map<String, dynamic> json) =>
-      MealDealPromo.fromJson(json);
-
   @override
-  String toString() {
+  String get info {
     final skus = dealSkus.join(',');
     return 'Meal: $skus together, for ${getFormattedPrice(promoPrice)} each';
   }

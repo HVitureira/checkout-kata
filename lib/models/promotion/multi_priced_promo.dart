@@ -21,8 +21,10 @@ final class MultiPricedPromo extends Promotion with PoundPriceMixin {
 
   @override
   (List<CartItem>, double) applyPromo(List<CartItem> cart) {
+    final cartCopy = [...cart];
+
     final applicableItems = [
-      ...cart.where(
+      ...cartCopy.where(
         (item) =>
             (item.stockItem.sku.toLowerCase() == itemSku.toLowerCase()) &&
             item.isPromoApplied == false,
@@ -33,14 +35,14 @@ final class MultiPricedPromo extends Promotion with PoundPriceMixin {
 
     final discountMultiplier = totalItems ~/ promoQuantity;
 
-    cart.removeWhere(applicableItems.contains);
+    cartCopy.removeWhere(applicableItems.contains);
     final promoAppliedItems = applicableItems.map((item) => item.applyPromo());
     final prices = promoAppliedItems
         .map((e) => e.stockItem.unitPrice)
         .reduce((value, element) => value + element);
 
     return (
-      cart..addAll(promoAppliedItems),
+      cartCopy..addAll(promoAppliedItems),
       (discountMultiplier * prices) - promoPrice
     );
   }
@@ -52,7 +54,5 @@ final class MultiPricedPromo extends Promotion with PoundPriceMixin {
       MultiPricedPromo.fromJson(json);
 
   @override
-  String toString() {
-    return 'Buy $promoQuantity for ${getFormattedPrice(promoPrice)}';
-  }
+  String get info => 'Buy $promoQuantity for ${getFormattedPrice(promoPrice)}';
 }

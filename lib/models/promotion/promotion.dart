@@ -32,6 +32,8 @@ abstract class Promotion {
   /// ```
   (List<CartItem>, double) applyPromo(List<CartItem> cart);
 
+  String get info;
+
   FormPromo? get asFormPromo {
     switch (runtimeType) {
       case BuyNGetFreePromo:

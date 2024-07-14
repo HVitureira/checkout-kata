@@ -19,8 +19,10 @@ final class BuyNGetFreePromo extends Promotion {
 
   @override
   (List<CartItem>, double) applyPromo(List<CartItem> cart) {
+    final cartCopy = [...cart];
+
     final applicableItems = [
-      ...cart.where(
+      ...cartCopy.where(
         (item) =>
             item.stockItem.sku.toLowerCase() == itemSku.toLowerCase() &&
             item.isPromoApplied == false,
@@ -32,25 +34,20 @@ final class BuyNGetFreePromo extends Promotion {
 
     final discountMultiplier = totalItems ~/ nQuantity;
 
-    cart.removeWhere(applicableItems.contains);
+    cartCopy.removeWhere(applicableItems.contains);
     final promoAppliedItems = applicableItems.map(
       (item) => item.applyPromo(),
     );
 
     return (
-      cart..addAll(promoAppliedItems),
+      cartCopy..addAll(promoAppliedItems),
       discountMultiplier * applicableItems.first.stockItem.unitPrice
     );
   }
 
   @override
-  String toString() {
-    return 'Buy $nQuantity, get 1 free';
-  }
-
-  @override
   Map<String, dynamic> toJson() => _$BuyNGetFreePromoToJson(this);
 
-  BuyNGetFreePromo fromJson(Map<String, dynamic> json) =>
-      BuyNGetFreePromo.fromJson(json);
+  @override
+  String get info => 'Buy $nQuantity, get 1 free';
 }
