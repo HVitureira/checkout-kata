@@ -1,4 +1,5 @@
 import 'package:checkout_kata/app/routes/routes.dart';
+import 'package:checkout_kata/app/widgets/shop_list.dart';
 import 'package:checkout_kata/data/shop_items_api.dart';
 import 'package:checkout_kata/models/stock_item.dart';
 import 'package:checkout_kata/pricing/cubit/cubit.dart';
@@ -32,38 +33,17 @@ class PricingPage extends StatelessWidget {
                 body: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                    children: [
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: state.items.length,
-                          itemBuilder: (context, index) {
-                            final currentItem = state.items.elementAt(index);
-                            final itemTitle = currentItem.sku;
-                            final itemPrice = currentItem.formattedPrice;
-                            final itemPromo = currentItem.promo;
-
-                            return Column(
-                              children: [
-                                ListTile(
-                                  leading: const Icon(Icons.shopping_bag_sharp),
-                                  title: Text(itemTitle),
-                                  subtitle: Text(
-                                    'Price: $itemPrice, '
-                                    'Promo: ${itemPromo ?? 'No promo'}',
-                                  ),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () => _showEditDialog(
-                                      context: context,
-                                      item: currentItem,
-                                      availableItems: state.items,
-                                    ),
-                                  ),
-                                ),
-                                const Divider(height: 0),
-                              ],
-                            );
-                          },
+                        child: ShopList(
+                          items: state.items,
+                          trailingIcon: Icons.edit,
+                          leadingIcon: Icons.shopping_bag_sharp,
+                          onTrailingPressed: (item) => _showEditDialog(
+                            context: context,
+                            item: item,
+                            availableItems: state.items,
+                          ),
                         ),
                       ),
                     ],
