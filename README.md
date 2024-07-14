@@ -6,6 +6,14 @@ A take home task by an English fintech company.
 
 Available at https://checkout-kata.web.app
 
+
+## Improvements Needed
+
+- Sync product promotion when changing a promo to Meal Deal (syncing all of the involved products).
+- The app would need translations to every market that we would make it available for.
+- Ideally we would have 100% test coverage
+
+
 ## How to run
 
 In the project root, run:
@@ -38,4 +46,4 @@ This should work for any browser that you have.
 |---|---|
 | ![Image 1 Alt Text](/images/1.png) | ![Image 4 Alt Text](/images/4.png) |
 | ![Image 2 Alt Text](/images/2.png) | ![Image 5 Alt Text](/images/5.png) |
-| ![Image 3 Alt Text](/images/3.png) | |
+| ![Image 3 Alt Text](/images/3.png) | ![Image 6 Alt Text](/images/6.png)|
