@@ -28,7 +28,7 @@ class ShopList extends StatelessWidget {
         return Column(
           children: [
             ListTile(
-              leading: const Icon(Icons.shopping_basket_rounded),
+              leading: Icon(leadingIcon),
               title: Text(itemTitle),
               subtitle: Text(
                 'Price: $itemPrice '
