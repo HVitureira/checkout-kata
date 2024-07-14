@@ -34,6 +34,7 @@ final class BuyNGetFreePromo extends Promotion {
 
     final discountMultiplier = totalItems ~/ nQuantity;
 
+    // remove items to avoid duplicates with and without promo
     cartCopy.removeWhere(applicableItems.contains);
     final promoAppliedItems = applicableItems.map(
       (item) => item.applyPromo(),

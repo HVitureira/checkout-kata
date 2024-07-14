@@ -35,7 +35,9 @@ final class MultiPricedPromo extends Promotion with PoundPriceMixin {
 
     final discountMultiplier = totalItems ~/ promoQuantity;
 
+    // remove items to avoid duplicates with and without promo
     cartCopy.removeWhere(applicableItems.contains);
+
     final promoAppliedItems = applicableItems.map((item) => item.applyPromo());
     final prices = promoAppliedItems
         .map((e) => e.stockItem.unitPrice)
