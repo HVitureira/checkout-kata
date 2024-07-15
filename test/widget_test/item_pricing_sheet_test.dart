@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:checkout_kata/models/stock_item.dart';
 import 'package:checkout_kata/pricing/cubit/cubit.dart';
-import 'package:checkout_kata/pricing/view/item_pricing_rules_sheet.dart';
+import 'package:checkout_kata/pricing/view/item_pricing_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
